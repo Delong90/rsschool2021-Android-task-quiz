@@ -79,11 +79,20 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int)
             nextButton?.isEnabled = (true)
         }
 
+        when(i){
+        in 1..3 -> nextButton?.text="NEXT"
+        4 -> nextButton?.text="SUBMIT"
+}
+
 
         nextButton?.setOnClickListener {
-
-            i = (i+1) % listQuestion.size
-            list?.newOpenQuizFragment(listQuestion,i)
+            i = (i+1)
+            if (i in 1..3) {
+                list?.newOpenQuizFragment(listQuestion, i)
+            }
+            if(i==4) {
+                list?.newOpenQuizFragment(listQuestion, i)
+            }
         }
     }
 
