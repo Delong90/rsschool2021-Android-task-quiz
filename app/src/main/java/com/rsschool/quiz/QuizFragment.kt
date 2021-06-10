@@ -63,7 +63,25 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int)
 
         list = context as NewOpenQuizFragment
 
+        optionOne?.setOnClickListener{
+            nextButton?.isEnabled = (true)
+        }
+        optionTwo?.setOnClickListener{
+            nextButton?.isEnabled = (true)
+        }
+        optionThree?.setOnClickListener{
+            nextButton?.isEnabled = (true)
+        }
+        optionFour?.setOnClickListener{
+            nextButton?.isEnabled = (true)
+        }
+        optionFive?.setOnClickListener{
+            nextButton?.isEnabled = (true)
+        }
+
+
         nextButton?.setOnClickListener {
+
             i = (i+1) % listQuestion.size
             list?.newOpenQuizFragment(listQuestion,i)
         }
