@@ -17,7 +17,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [Result.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Result(private var listQuestion: List<Questions>, private var i:Int, var userAnswerList:MutableList<Int>) : Fragment() {
+class Result(private var result:Int) : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -45,7 +45,7 @@ class Result(private var listQuestion: List<Questions>, private var i:Int, var u
 
         textResult = view.findViewById(R.id.result)
 
-        textResult?.text = "$userAnswerList"
+        textResult?.text = "$result"
     }
 
 //    companion object {

@@ -6,12 +6,35 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainer
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.ViewModelProvider
 
 
-class QuizFragment(private var listQuestion: List<Questions>, private var i:Int, var userAnswerList:MutableList<Int>): Fragment() {
+class QuizFragment(): Fragment() {
+    private val listQuestion = listOf(
+        Questions("Первый вопрос","Первый вопрос-Первый вариант",
+            "Первый вопрос-Второй вариант","Первый вопрос-Третий вариант",
+            "Первый вопрос-Четвёртый вариант","Первый вопрос-Пятый вариант",
+            1),
+
+        Questions("Второй вопрос","Второй вопрос-Первый вариант",
+            "Второй вопрос-Второй вариант","Второй вопрос-Третий вариант",
+            "Второй вопрос-Четвёртый вариант","Второй вопрос-Пятый вариант",
+            2),
+
+        Questions("Третий вопрос","Третий вопрос-Первый вариант",
+            "Третий вопрос-Второй вариант","Третий вопрос-Третий вариант",
+            "Третий вопрос-Четвёртый вариант","Третий вопрос-Пятый вариант",
+            3),
+
+        Questions("Четвёртый вопрос","Четвёртый вопрос-Первый вариант",
+            "Четвёртый вопрос-Второй вариант","Четвёртый вопрос-Третий вариант",
+            "Четвёртый вопрос-Четвёртый вариант","Четвёртый вопрос-Пятый вариант",
+            4),
+
+        Questions("Пятый вопрос","Пятый вопрос-Первый вариант",
+            "Пятый вопрос-Второй вариант","Пятый вопрос-Третий вариант",
+            "Пятый вопрос-Четвёртый вариант","Пятый вопрос-Пятый вариант",
+            5)
+    )
 
     private var optionOne: RadioButton? = null
     private var optionTwo: RadioButton? = null
@@ -39,6 +62,11 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var numberQuestion = arguments?.getInt(NUMBER_QUESTION)
+        var result = arguments?.getInt(RESULT)
+        var userAnswerList = arguments?.getIntArray(USER_ANSWER_LIST)
+
+
         optionOne = view.findViewById(R.id.option_one)
         optionTwo = view.findViewById(R.id.option_two)
         optionThree = view.findViewById(R.id.option_three)
@@ -52,19 +80,19 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int,
 
 
 
-        optionOne?.text = listQuestion[i].oneAnswer
-        optionTwo?.text = listQuestion[i].twoAnswer
-        optionThree?.text = listQuestion[i].threeAnswer
-        optionFour?.text = listQuestion[i].fourAnswer
-        optionFive?.text = listQuestion[i].fiveAnswer
-        textQuestion?.text = listQuestion[i].question
-        toolbar?.title = "Question ${i+1}"
+        optionOne?.text = listQuestion[numberQuestion!!].oneAnswer
+        optionTwo?.text = listQuestion[numberQuestion].twoAnswer
+        optionThree?.text = listQuestion[numberQuestion].threeAnswer
+        optionFour?.text = listQuestion[numberQuestion].fourAnswer
+        optionFive?.text = listQuestion[numberQuestion].fiveAnswer
+        textQuestion?.text = listQuestion[numberQuestion].question
+        toolbar?.title = "Question ${numberQuestion+1}"
 
-        if (userAnswerList[i]!=0){
+        if (userAnswerList!![numberQuestion]!=0){
             nextButton?.isEnabled = (true)
         }else{nextButton?.isEnabled = (false)}
 
-        when(userAnswerList[i]){
+        when(userAnswerList[numberQuestion]){
             1->optionOne?.isChecked = true
             2->optionTwo?.isChecked = true
             3->optionThree?.isChecked = true
@@ -80,31 +108,31 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int,
 
         optionOne?.setOnClickListener {
             nextButton?.isEnabled = (true)
-            userAnswerList[i] = 1
+            userAnswerList[numberQuestion] = 1
             println(userAnswerList)
         }
         optionTwo?.setOnClickListener {
             nextButton?.isEnabled = (true)
-            userAnswerList[i] = 2
+            userAnswerList[numberQuestion] = 2
             println(userAnswerList)
         }
         optionThree?.setOnClickListener {
             nextButton?.isEnabled = (true)
-            userAnswerList[i] = 3
+            userAnswerList[numberQuestion] = 3
             println(userAnswerList)
         }
         optionFour?.setOnClickListener {
             nextButton?.isEnabled = (true)
-            userAnswerList[i] = 4
+            userAnswerList[numberQuestion] = 4
             println(userAnswerList)
         }
         optionFive?.setOnClickListener {
             nextButton?.isEnabled = (true)
-            userAnswerList[i] = 5
+            userAnswerList[numberQuestion] = 5
             println(userAnswerList)
         }
 
-        when(i){
+        when(numberQuestion){
             0 -> prevButton?.isEnabled = false
             in 1..3 -> nextButton?.text="NEXT"
             4 -> nextButton?.text="SUBMIT"
@@ -113,11 +141,21 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int,
 
         nextButton?.setOnClickListener {
 
-                if (i in 0..3) {
-                    list?.newOpenQuizFragment(listQuestion, (i + 1), userAnswerList)
+                if (numberQuestion in 0..3) {
+                    if (result != null) {
+                        list?.newOpenQuizFragment((numberQuestion + 1), result, userAnswerList)
+                    }
                 }
-                if (i == 4) {
-                    list?.newOpenResult(listQuestion, (i + 1), userAnswerList)
+                if (numberQuestion == 4) {
+                    if (result != null) {
+                        for(j in listQuestion){
+                            if (j.trueAnswer == userAnswerList[numberQuestion-4]){
+                                numberQuestion++
+                                result++
+                            }
+                        }
+                        list?.newOpenResult(result)
+                    }
                 }
 
         }
@@ -129,21 +167,27 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int,
 
     }
 
-//    companion object {
-//
-//        @JvmStatic
-//        fun newInstance(): QuizFragment {
-//            val fragment = QuizFragment()
-//            val args = Bundle()
-//            fragment.arguments = args
-//            return fragment
-//        }
-//
-//    }
+    companion object {
+
+        @JvmStatic
+        fun newInstance(numberQuestion: Int, result:Int, userAnswerList: IntArray): QuizFragment {
+            val fragment = QuizFragment()
+            val args = Bundle()
+            args.putInt(NUMBER_QUESTION, numberQuestion)
+            args.putInt(RESULT,result)
+            args.putIntArray(USER_ANSWER_LIST, userAnswerList)
+            fragment.arguments = args
+            return fragment
+        }
+        private const val NUMBER_QUESTION = "NUMBER_QUESTION"
+        private const val RESULT = "RESULT"
+        private const val USER_ANSWER_LIST = "USER_ANSWER_LIST"
+
+    }
 
     interface NewOpenQuizFragment{
-        fun newOpenQuizFragment(listQuestion:List<Questions>,i:Int,userAnswerList:MutableList<Int>)
-        fun newOpenResult(listQuestion:List<Questions>,i:Int,userAnswerList:MutableList<Int>)
+        fun newOpenQuizFragment(numberQuestion:Int, result:Int, userAnswerList: IntArray?)
+        fun newOpenResult(result:Int)
     }
 
 }
