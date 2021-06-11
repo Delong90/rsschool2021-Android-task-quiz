@@ -50,11 +50,19 @@ class MainActivity : AppCompatActivity(), QuizFragment.NewOpenQuizFragment {
 
     }
 
+    private fun openResult(listQuestion:List<Questions>, i:Int,userAnswerList:MutableList<Int>){
+        var quizFragment:Fragment = Result(listQuestion, i,userAnswerList)
+        var transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        transaction.addToBackStack("").replace(R.id.container, quizFragment).commit()
+
+    }
 
     override fun newOpenQuizFragment(listQuestion:List<Questions>,i:Int,userAnswerList:MutableList<Int>){
         openQuizFragment(listQuestion,i,userAnswerList)
     }
-
+    override fun newOpenResult(listQuestion:List<Questions>,i:Int,userAnswerList:MutableList<Int>){
+        openResult(listQuestion,i,userAnswerList)
+    }
 
 
 }

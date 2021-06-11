@@ -64,6 +64,14 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int,
             nextButton?.isEnabled = (true)
         }else{nextButton?.isEnabled = (false)}
 
+        when(userAnswerList[i]){
+            1->optionOne?.isChecked = true
+            2->optionTwo?.isChecked = true
+            3->optionThree?.isChecked = true
+            4->optionFour?.isChecked = true
+            5->optionFive?.isChecked = true
+        }
+
 
 
         list = context as NewOpenQuizFragment
@@ -109,8 +117,7 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int,
                     list?.newOpenQuizFragment(listQuestion, (i + 1), userAnswerList)
                 }
                 if (i == 4) {
-                    nextButton?.isEnabled = (false)
-                    list?.newOpenQuizFragment(listQuestion, (i + 1), userAnswerList)
+                    list?.newOpenResult(listQuestion, (i + 1), userAnswerList)
                 }
 
         }
@@ -119,6 +126,7 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int,
             parentFragmentManager.popBackStack()
 
         }
+
     }
 
 //    companion object {
@@ -135,5 +143,7 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int,
 
     interface NewOpenQuizFragment{
         fun newOpenQuizFragment(listQuestion:List<Questions>,i:Int,userAnswerList:MutableList<Int>)
+        fun newOpenResult(listQuestion:List<Questions>,i:Int,userAnswerList:MutableList<Int>)
     }
+
 }
