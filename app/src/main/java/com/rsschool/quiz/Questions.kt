@@ -6,4 +6,4 @@ data class Questions (val question:String,
                       val threeAnswer:String,
                       val fourAnswer:String,
                       val fiveAnswer:String,
-                      val trueAnswer:String)
+                      val trueAnswer:Int)

@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.RadioButton
-import android.widget.TextView
-import android.widget.Toolbar
+import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainer
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 
-class QuizFragment(private var listQuestion: List<Questions>, private var i:Int): Fragment() {
+
+class QuizFragment(private var listQuestion: List<Questions>, private var i:Int, var userAnswerList:MutableList<Int>): Fragment() {
 
     private var optionOne: RadioButton? = null
     private var optionTwo: RadioButton? = null
@@ -22,7 +22,8 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int)
     private var textQuestion:TextView? = null
     private var nextButton:Button? = null
     private var list: NewOpenQuizFragment? = null
-
+    private var radioGroup:RadioGroup? = null
+    private var prevButton:Button? = null
 
 
 
@@ -46,7 +47,8 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int)
         textQuestion = view.findViewById(R.id.question)
         nextButton = view.findViewById(R.id.next_button)
         toolbar = view.findViewById(R.id.toolbar)
-
+        radioGroup = view.findViewById(R.id.radio_group)
+        prevButton = view.findViewById(R.id.previous_button)
 
 
 
@@ -58,41 +60,64 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int)
         textQuestion?.text = listQuestion[i].question
         toolbar?.title = "Question ${i+1}"
 
+        if (userAnswerList[i]!=0){
+            nextButton?.isEnabled = (true)
+        }else{nextButton?.isEnabled = (false)}
 
 
 
         list = context as NewOpenQuizFragment
 
-        optionOne?.setOnClickListener{
+
+
+        optionOne?.setOnClickListener {
             nextButton?.isEnabled = (true)
+            userAnswerList[i] = 1
+            println(userAnswerList)
         }
-        optionTwo?.setOnClickListener{
+        optionTwo?.setOnClickListener {
             nextButton?.isEnabled = (true)
+            userAnswerList[i] = 2
+            println(userAnswerList)
         }
-        optionThree?.setOnClickListener{
+        optionThree?.setOnClickListener {
             nextButton?.isEnabled = (true)
+            userAnswerList[i] = 3
+            println(userAnswerList)
         }
-        optionFour?.setOnClickListener{
+        optionFour?.setOnClickListener {
             nextButton?.isEnabled = (true)
+            userAnswerList[i] = 4
+            println(userAnswerList)
         }
-        optionFive?.setOnClickListener{
+        optionFive?.setOnClickListener {
             nextButton?.isEnabled = (true)
+            userAnswerList[i] = 5
+            println(userAnswerList)
         }
 
         when(i){
-        in 1..3 -> nextButton?.text="NEXT"
-        4 -> nextButton?.text="SUBMIT"
-}
+            0 -> prevButton?.isEnabled = false
+            in 1..3 -> nextButton?.text="NEXT"
+            4 -> nextButton?.text="SUBMIT"
+        }
 
 
         nextButton?.setOnClickListener {
-            i = (i+1)
-            if (i in 1..3) {
-                list?.newOpenQuizFragment(listQuestion, i)
-            }
-            if(i==4) {
-                list?.newOpenQuizFragment(listQuestion, i)
-            }
+
+                if (i in 0..3) {
+                    list?.newOpenQuizFragment(listQuestion, (i + 1), userAnswerList)
+                }
+                if (i == 4) {
+                    nextButton?.isEnabled = (false)
+                    list?.newOpenQuizFragment(listQuestion, (i + 1), userAnswerList)
+                }
+
+        }
+
+        prevButton?.setOnClickListener {
+            parentFragmentManager.popBackStack()
+
         }
     }
 
@@ -109,6 +134,6 @@ class QuizFragment(private var listQuestion: List<Questions>, private var i:Int)
 //    }
 
     interface NewOpenQuizFragment{
-        fun newOpenQuizFragment(listQuestion:List<Questions>,i:Int)
+        fun newOpenQuizFragment(listQuestion:List<Questions>,i:Int,userAnswerList:MutableList<Int>)
     }
 }
