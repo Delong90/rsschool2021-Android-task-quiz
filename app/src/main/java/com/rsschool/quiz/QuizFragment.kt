@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
-
+import com.rsschool.quiz.databinding.FragmentQuizBinding
 
 class QuizFragment(): Fragment() {
     private val listQuestion = listOf(
@@ -36,7 +36,7 @@ class QuizFragment(): Fragment() {
             5)
     )
 
-    private var optionOne: RadioButton? = null
+
     private var optionTwo: RadioButton? = null
     private var optionThree: RadioButton? = null
     private var optionFour: RadioButton? = null
@@ -51,13 +51,16 @@ class QuizFragment(): Fragment() {
 
 
 
+    private var _binding: FragmentQuizBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_quiz, container, false)
+        _binding = FragmentQuizBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,7 +70,7 @@ class QuizFragment(): Fragment() {
         var userAnswerList = arguments?.getIntArray(USER_ANSWER_LIST)
 
 
-        optionOne = view.findViewById(R.id.option_one)
+
         optionTwo = view.findViewById(R.id.option_two)
         optionThree = view.findViewById(R.id.option_three)
         optionFour = view.findViewById(R.id.option_four)
@@ -80,7 +83,7 @@ class QuizFragment(): Fragment() {
 
 
 
-        optionOne?.text = listQuestion[numberQuestion!!].oneAnswer
+        binding.optionOne.text = listQuestion[numberQuestion!!].oneAnswer
         optionTwo?.text = listQuestion[numberQuestion].twoAnswer
         optionThree?.text = listQuestion[numberQuestion].threeAnswer
         optionFour?.text = listQuestion[numberQuestion].fourAnswer
@@ -93,7 +96,7 @@ class QuizFragment(): Fragment() {
         }else{nextButton?.isEnabled = (false)}
 
         when(userAnswerList[numberQuestion]){
-            1->optionOne?.isChecked = true
+            1->binding.optionOne.isChecked = true
             2->optionTwo?.isChecked = true
             3->optionThree?.isChecked = true
             4->optionFour?.isChecked = true
@@ -106,7 +109,7 @@ class QuizFragment(): Fragment() {
 
 
 
-        optionOne?.setOnClickListener {
+        binding.optionOne.setOnClickListener {
             nextButton?.isEnabled = (true)
             userAnswerList[numberQuestion] = 1
             println(userAnswerList)
@@ -162,7 +165,6 @@ class QuizFragment(): Fragment() {
 
         prevButton?.setOnClickListener {
             parentFragmentManager.popBackStack()
-
         }
 
     }
@@ -190,4 +192,9 @@ class QuizFragment(): Fragment() {
         fun newOpenResult(result:Int)
     }
 
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

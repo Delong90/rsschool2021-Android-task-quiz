@@ -1,14 +1,21 @@
 package com.rsschool.quiz
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.rsschool.quiz.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity(), QuizFragment.NewOpenQuizFragment {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         var numberQuestion = 0
         var result = 0

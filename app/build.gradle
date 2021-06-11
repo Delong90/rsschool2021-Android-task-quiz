@@ -4,6 +4,8 @@ plugins {
 }
 
 android {
+
+
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
@@ -21,6 +23,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 }
 
