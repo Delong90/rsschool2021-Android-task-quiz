@@ -9,7 +9,7 @@ data class Questions (val question:String,
                       val trueAnswer:Int)
  val listQuestionKT = listOf(
     Questions("1. Длительная блокировка Main-потока может привести к:","Системной ошибке ANR (Application Not Responding)",
-        "IllegalArgumentException","Системной ошибке ANR (Application Not Responding)",
+        "IllegalArgumentException","Ни к чему не приводит. Приложение \"убьет\" задачу, которая блокирует поток, и продолжит выполнение",
         "Сворачиваю приложения в фон","Закрытие приложения",
         1),
 
