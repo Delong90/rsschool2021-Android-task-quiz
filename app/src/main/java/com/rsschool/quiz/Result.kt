@@ -19,7 +19,7 @@ class Result : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         _binding = FragmentResultBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -29,8 +29,8 @@ class Result : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val result = arguments?.getInt(RESULT)
-        var userAnswerList = arguments?.getIntArray(USER_ANSWER_LIST)
+        val result = requireNotNull(arguments?.getInt(RESULT))
+        val userAnswerList = requireNotNull(arguments?.getIntArray(USER_ANSWER_LIST))
 
         binding.result.text = "Результат: $result из 5"
 
@@ -39,7 +39,7 @@ class Result : Fragment() {
         binding.share.setOnClickListener{
             val sendIntent = Intent()
             sendIntent.action = Intent.ACTION_SEND
-            sendIntent.putExtra(Intent.EXTRA_TEXT, "Quiz result\n\n Результат: $result из 5\n\n ${returnResult(userAnswerList!!)}")
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "Quiz result\n\n Результат: $result из 5\n\n ${returnResult(userAnswerList)}")
             sendIntent.type = "text/plain"
             startActivity(Intent.createChooser(sendIntent, "Поделиться"))
         }
@@ -57,7 +57,6 @@ class Result : Fragment() {
     fun returnResult(userAnswerList: IntArray):String{
         var result = ""
         var i = 0
-        var trueAnswer = ""
         var userAnswer = ""
         while (i<5){
 //            when(listQuestion[i].trueAnswer){

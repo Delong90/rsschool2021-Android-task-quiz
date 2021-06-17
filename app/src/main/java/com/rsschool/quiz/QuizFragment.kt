@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.rsschool.quiz.databinding.FragmentQuizBinding
 
 
+
 class QuizFragment: Fragment() {
 
 
@@ -35,8 +36,8 @@ class QuizFragment: Fragment() {
 //        var themeResId:Int = resources.getIdentifier("ThemeQuiz", "style", "com.rsschool.quiz.theme")
 //         context?.theme?.applyStyle(resources.getIdentifier("ThemeQuiz","style","com.rsschool.quiz"),true)
 //        context?.theme?.applyStyle(resources.getIdentifier("ThemeQuizSecond","style","app.src.main.res.values.themes"),true)
-        val numberQuestion = arguments?.getInt(NUMBER_QUESTION)
-        setTheme(numberQuestion!!,inflater)
+        val numberQuestion = requireNotNull(arguments?.getInt(NUMBER_QUESTION))
+        setTheme(numberQuestion,inflater)
         setStatusBarColor(numberQuestion)
         _binding = FragmentQuizBinding.inflate(inflater, container, false)
         return binding.root
@@ -50,13 +51,13 @@ class QuizFragment: Fragment() {
 
 // Получение входных данных
 
-        val numberQuestion = arguments?.getInt(NUMBER_QUESTION)
-        var result = arguments?.getInt(RESULT)
-        val userAnswerList = arguments?.getIntArray(USER_ANSWER_LIST)
+        val numberQuestion = requireNotNull(arguments?.getInt(NUMBER_QUESTION))
+        var result = requireNotNull(arguments?.getInt(RESULT))
+        val userAnswerList = requireNotNull(arguments?.getIntArray(USER_ANSWER_LIST))
 
 
 // Заполнение фрагмента(номер вопроса, вопрос, варианты ответа)
-        binding.optionOne.text = listQuestion[numberQuestion!!].oneAnswer
+        binding.optionOne.text = listQuestion[numberQuestion].oneAnswer
         binding.optionTwo.text = listQuestion[numberQuestion].twoAnswer
         binding.optionThree.text = listQuestion[numberQuestion].threeAnswer
         binding.optionFour.text = listQuestion[numberQuestion].fourAnswer
@@ -66,12 +67,14 @@ class QuizFragment: Fragment() {
 
 
 // состояние кнопки next в зависимости от того выбран ли какой то овет
-        if (userAnswerList!![numberQuestion] != 0) {
+        if (userAnswerList[numberQuestion] != 0) {
             binding.nextButton.isEnabled = (true)
         } else {
             binding.nextButton.isEnabled = (false)
         }
 // состояние радио кнопок в зависимости от того выбран ли какой то овет
+
+
 
         when (userAnswerList[numberQuestion]) {
             1 -> binding.optionOne.isChecked = true
@@ -80,6 +83,7 @@ class QuizFragment: Fragment() {
             4 -> binding.optionFour.isChecked = true
             5 -> binding.optionFive.isChecked = true
         }
+
 
         list = context as NewOpenQuizFragment
 
@@ -130,21 +134,17 @@ class QuizFragment: Fragment() {
         binding.nextButton.setOnClickListener {
 
             if (numberQuestion in 0..3) {
-                if (result != null) {
-                    list?.newOpenQuizFragment((numberQuestion + 1), result, userAnswerList)
-                }
+                list?.newOpenQuizFragment((numberQuestion + 1), result, userAnswerList)
             }
             if (numberQuestion == 4) {
                 var k = 0
-                if (result != null) {
-                    for (j in listQuestion) {
-                        if (j.trueAnswer == userAnswerList[k]) {
-                            result++
-                            k++
-                        } else k++
-                    }
-                    list?.newOpenResult(result, userAnswerList)
+                for (j in listQuestion) {
+                    if (j.trueAnswer == userAnswerList[k]) {
+                        result++
+                        k++
+                    } else k++
                 }
+                list?.newOpenResult(result, userAnswerList)
             }
 
         }
