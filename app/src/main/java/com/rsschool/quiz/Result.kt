@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.rsschool.quiz.databinding.FragmentResultBinding
 
@@ -39,7 +40,8 @@ class Result : Fragment() {
         binding.share.setOnClickListener{
             val sendIntent = Intent()
             sendIntent.action = Intent.ACTION_SEND
-            sendIntent.putExtra(Intent.EXTRA_TEXT, "Quiz result\n\n Результат: $result из 5\n\n ${returnResult(userAnswerList)}")
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT,"Quiz result")
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "Результат: $result из 5\n\n ${returnResult(userAnswerList)}")
             sendIntent.type = "text/plain"
             startActivity(Intent.createChooser(sendIntent, "Поделиться"))
         }
@@ -49,7 +51,8 @@ class Result : Fragment() {
         }
 
         binding.exitApp.setOnClickListener{
-            list?.onBackPressed()
+//            list?.onBackPressed()
+            ActivityCompat.finishAffinity(requireActivity())
         }
 
     }
